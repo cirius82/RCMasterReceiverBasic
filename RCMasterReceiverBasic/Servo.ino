@@ -1,7 +1,10 @@
 
+/* -- Includes ------------------------------------------------------------ */
 #include <Servo.h>
 
-///---DEFINES ---///
+/* -- Private Function Prototypes ----------------------------------------- */
+
+/* -- Private Defines ----------------------------------------------------- */
 #define INTERVAL 249
 #define SERVOPIN 3
 #define ESCPIN 4
@@ -14,11 +17,10 @@
 #define EEPROMADDR_SERVOMAX 2
 #define EEPROMADDR_ESCMIN 4
 #define EEPROMADDR_ESCMAX 6 
-///--- TYPES ---///
 
-///--- VARIABLES ---///
-uint32_t _servoLastAction = 0;
+/* -- Private Types ------------------------------------------------------- */
 
+/* -- Private Global Variables -------------------------------------------- */
 Servo myServo;
 Servo myESC;
 uint16_t _servoMin = 544;
@@ -26,10 +28,11 @@ uint16_t _servoMax = 2400;
 uint16_t _escMin = 544;
 uint16_t _escMax = 2400;
 
-///--- Setter/Getter ---///
+uint32_t _servoLastAction = 0;
 
-///--- METHODS ---///
+/* -- Setter / Getter ----------------------------------------------------- */
 
+/* -- Public Functions ---------------------------------------------------- */
 uint8_t Servo_setup()
 {
   // read values from eeprom
@@ -37,12 +40,6 @@ uint8_t Servo_setup()
   _servoMax = Read_UInt16(EEPROMADDR_SERVOMAX);
   _escMin = Read_UInt16(EEPROMADDR_ESCMIN);
   _escMax = Read_UInt16(EEPROMADDR_ESCMAX);
-
-//1st run:
-//Save_UInt16(_servoMin, 0);
-//Save_UInt16(_servoMax, 2);
-//Save_UInt16(_escMin, 4);
-//Save_UInt16(_escMax, 6);
   
   myServo.attach(SERVOPIN);//, _servoMin, _servoMax);
   myESC.attach(ESCPIN);//, _escMin, _escMax);
@@ -169,3 +166,5 @@ void UpdateESC()
   myESC.detach();
   myESC.attach(SERVOPIN, _servoMin, _servoMax);
 }
+
+/* -- Private Functions --------------------------------------------------- */

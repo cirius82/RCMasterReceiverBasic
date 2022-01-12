@@ -1,18 +1,17 @@
 
+/* -- Includes ------------------------------------------------------------ */
 #include <SPI.h>
 #include <NRFLite.h>
 
-const static uint8_t RADIO_ID = 0;
-const static uint8_t DESTINATION_RADIO_ID = 1;
-const static uint8_t PIN_RADIO_CE = 15; // blau
-const static uint8_t PIN_RADIO_CSN = 14; // gruen
-//const static uint8_t PIN_RED_LED = 13; // n/a SCK pin
-uint32_t _timer = 0; 
+/* -- Private Function Prototypes ----------------------------------------- */
 
-//class _spi = SPIClass;
+/* -- Private Defines ----------------------------------------------------- */
+#define RADIO_ID 0
+#define DESTINATION_RADIO_ID 1
+#define PIN_RADIO_CE 15 // blau
+#define PIN_RADIO_CSN 14 // gruen
 
-SPIClass mySPI = SPI;
-
+/* -- Private Types ------------------------------------------------------- */
 enum RadioPacketType
 {
     AcknowledgementData, // Produced by the primary receiver and provided to the transmitter via an acknowledgement data packet.
@@ -31,7 +30,10 @@ struct RadioPacket
     uint8_t Value3;
 };
 
+/* -- Private Global Variables -------------------------------------------- */
+SPIClass mySPI = SPI;
 NRFLite _radio;
+
 uint8_t _outDataType = 0;
 uint16_t _outDataValue1 = 0;
 uint16_t _outDataValue2 = 0;
@@ -42,7 +44,9 @@ uint16_t _inDataValue1 = 0;
 uint16_t _inDataValue2 = 0;
 uint8_t _inDataValue3 = 0;
 
-///--- Setter/Getter ---///
+uint32_t _timer = 0; 
+
+/* -- Setter / Getter ----------------------------------------------------- */
 void SetOutData(uint8_t type, uint16_t value1, uint16_t value2, uint8_t value3)
 {
   _outDataType = type;
@@ -67,6 +71,7 @@ void GetIntData(uint8_t *type, uint16_t *value1, uint16_t *value2, uint8_t *valu
   *value3 = _inDataValue3;
 }
 
+/* -- Public Functions ---------------------------------------------------- */
 uint8_t NRFLite_setup()
 {
   uint8_t retVal = 0;
@@ -125,3 +130,4 @@ uint8_t NRFLite_Cyclic(bool *dataReceived, bool *dataSend)
     }
     return retVal;
 }
+/* -- Private Functions --------------------------------------------------- */

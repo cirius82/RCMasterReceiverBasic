@@ -1,6 +1,7 @@
 /**
  * Teensy 3.2
  * Test um daten mit einem Request zu übertragen
+ * Datum 12.01.2022
  * pin-out:
  * 3 - Servo1
  * 4 - Servo2
@@ -18,23 +19,27 @@
  * 20 - Reflex IR für rpm (digital in)
  * 16 - voltage (analog in)
  */
+
+ /* -- Includes ------------------------------------------------------------ */
 #include <EEPROM.h>
 
-///---DEFINES ---///
+/* -- Private Function Prototypes ----------------------------------------- */
+
+/* -- Private Defines ----------------------------------------------------- */
 #define SIGNEDOFFSET 32768
 #define FAILSAFE 500
-///--- TYPES ---///
 
-///--- VARIABLES ---///
+/* -- Private Types ------------------------------------------------------- */
+
+/* -- Private Global Variables -------------------------------------------- */
 uint8_t _transmitIdCounter = 0;
 unsigned long _lastReceived = 0;
 uint16_t _failSaveX1 = 1500;
 uint16_t _failSaveY2 = 1500;
 
-///--- Setter/Getter ---///
+/* -- Setter / Getter ----------------------------------------------------- */
 
-///--- METHODS ---///
-
+/* -- Public Functions ---------------------------------------------------- */
 void setup()
 {
   Serial.begin(115200);
@@ -143,3 +148,5 @@ void loop()
     
   }
 }
+
+/* -- Private Functions --------------------------------------------------- */

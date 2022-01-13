@@ -10,10 +10,10 @@
  * 23 - LED1
  * 22 - LED2
  * pin-in:
- * 21 - S1A
+ * 21 - S1A (S1 näher an servo Stecker)
  * 20 - S1B
- * 19 - S2A
- * 18 - S2B
+ * 19 - S2A (S2 näher an HighCurrentOutput)
+ * 18 - S2B // RPM pin
  * 
  * 21 - current meter (analog in)
  * 20 - Reflex IR für rpm (digital in)
@@ -47,7 +47,7 @@ void setup()
     //Serial.println("nRF24 error");
   }
   Servo_setup();
-
+  GPIO_setup();
   _lastReceived = millis();
 }
 
@@ -62,6 +62,11 @@ void loop()
   //bool gpio = false;
   if (GPIO_Cyclic()){
     //   
+  }
+
+  if (GPIO_RPM_Cyclic()) {
+    Serial.print("Revolutions ");
+    Serial.println(GPIOGetRevolutions());
   }
   
   bool dataReceived = false;

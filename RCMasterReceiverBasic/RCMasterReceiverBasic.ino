@@ -65,8 +65,8 @@ void loop()
   }
 
   if (GPIO_RPM_Cyclic()) {
-    Serial.print("Revolutions ");
-    Serial.println(GPIOGetRevolutions());
+    //Serial.print("Revolutions ");
+    //Serial.println(GPIOGetVelocity());
   }
   
   bool dataReceived = false;

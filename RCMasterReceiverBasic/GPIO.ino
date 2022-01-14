@@ -6,9 +6,9 @@
 /* -- Private Defines ----------------------------------------------------- */
 
 #define INTERVAL 249
-#define REVOLUTIONS_INTERVAL 4999 // high for testing
-#define BATTPIN 21
-#define CURRENTPIN 20
+#define REVOLUTIONS_INTERVAL 999 // high for testing
+#define CURRENTPIN 21
+#define BATTPIN 20
 #define RPMPIN 18
 
 /* -- Private Types ------------------------------------------------------- */
@@ -26,12 +26,7 @@ bool _prevState = false;
 /* -- Setter / Getter ----------------------------------------------------- */
 uint16_t GPIOGetVoltage(){return _voltage;}   // mV
 uint16_t GPIOGetCurrent(){return _current;}
-uint16_t GPIOGetVelocity()
-{
-  uint16_t tmp = _revolutions;
-  _revolutions = 0;
-  return tmp;
-}
+uint16_t GPIOGetVelocity(){return _revolutions;}
 
 /* -- Public Functions ---------------------------------------------------- */
 uint8_t GPIO_setup()

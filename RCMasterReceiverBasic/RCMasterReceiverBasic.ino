@@ -42,9 +42,9 @@ uint16_t _failSaveY2 = 1500;
 /* -- Public Functions ---------------------------------------------------- */
 void setup()
 {
-  //Serial.begin(115200);
+  Serial.begin(115200);
   if(NRFLite_setup() != 0) {
-    //Serial.println("nRF24 error");
+    Serial.println("nRF24 error");
   }
   Servo_setup();
   GPIO_setup();
@@ -61,17 +61,17 @@ void loop()
   
   //bool gpio = false;
   if (GPIO_Cyclic()){
-//    uint16_t voltage = GPIOGetVoltage();
-//    uint16_t current = GPIOGetCurrent();
-//    Serial.print("Voltage: ");
-//    Serial.print(voltage);
-//    Serial.print(", Current: ");
-//    Serial.println(current);
+    uint16_t voltage = GPIOGetVoltage();
+    uint16_t current = GPIOGetCurrent();
+    Serial.print("Voltage: ");
+    Serial.print(voltage);
+    Serial.print(", Current: ");
+    Serial.println(current);
   }
 
   if (GPIO_RPM_Cyclic()) {
-//    Serial.print("Revolutions ");
-//    Serial.println(GPIOGetVelocity());
+    Serial.print("Revolutions ");
+    Serial.println(GPIOGetVelocity());
   }
   
   bool dataReceived = false;
@@ -91,14 +91,14 @@ void loop()
       GetIntData(&inDataType, &inDataValue1, &inDataValue2, &inDataValue3);
       //uint16_t servoValue = map(inDataValue1, 1, 1, 255, 180);
 
-//      Serial.print("Received ");
-//      Serial.print(inDataType);
-//      Serial.print(", Val1: ");
-//      Serial.print(inDataValue1);
-//      Serial.print(", Val2: ");
-//      Serial.print(inDataValue2);
-//      Serial.print(", Val3: ");
-//      Serial.println(inDataValue3 + ", ");
+      Serial.print("Received ");
+      Serial.print(inDataType);
+      Serial.print(", Val1: ");
+      Serial.print(inDataValue1);
+      Serial.print(", Val2: ");
+      Serial.print(inDataValue2);
+      Serial.print(", Val3: ");
+      Serial.println(inDataValue3 + ", ");
       
       if (inDataType == 0) {          // normal signal
         SetServo(inDataValue1);

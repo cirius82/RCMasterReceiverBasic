@@ -6,10 +6,12 @@
 /* -- Private Defines ----------------------------------------------------- */
 
 #define INTERVAL 249
-#define REVOLUTIONS_INTERVAL 999 // high for testing
+#define REVOLUTIONS_INTERVAL 999 // high for testing 64-66 ~1meter 
 #define CURRENTPIN 21
 #define BATTPIN 20
 #define RPMPIN 18
+#define HIGHCURRENTPINA 22
+#define HIGHCURRENTPINB 23
 
 /* -- Private Types ------------------------------------------------------- */
 
@@ -32,10 +34,12 @@ uint16_t GPIOGetVelocity(){return _revolutions;}
 uint8_t GPIO_setup()
 {
   analogReadResolution(12); // max 13 , 12==4096
+  analogWriteFrequency(23, 12000);
   pinMode(RPMPIN, INPUT_PULLUP);
   _gpioLastAction = millis();
   _gpioLastRevolutions = millis();
-
+  //analogWrite(HIGHCURRENTPINA, 200);
+  //analogWrite(HIGHCURRENTPINB, 200);
   return 0;  
 }
 

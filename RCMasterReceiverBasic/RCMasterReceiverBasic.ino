@@ -63,10 +63,13 @@ void loop()
   if (GPIO_Cyclic()){
     uint16_t voltage = GPIOGetVoltage();
     uint16_t current = GPIOGetCurrent();
+    uint16_t revolutions = GPIOGetVelocity();
     Serial.print("Voltage: ");
     Serial.print(voltage);
     Serial.print(", Current: ");
-    Serial.println(current);
+    Serial.print(current);
+    Serial.print(", Revolutions ");
+    Serial.println(revolutions);
   }
 
   if (GPIO_RPM_Cyclic()) {
@@ -91,14 +94,14 @@ void loop()
       GetIntData(&inDataType, &inDataValue1, &inDataValue2, &inDataValue3);
       //uint16_t servoValue = map(inDataValue1, 1, 1, 255, 180);
 
-      Serial.print("Received ");
-      Serial.print(inDataType);
-      Serial.print(", Val1: ");
-      Serial.print(inDataValue1);
-      Serial.print(", Val2: ");
-      Serial.print(inDataValue2);
-      Serial.print(", Val3: ");
-      Serial.println(inDataValue3 + ", ");
+//      Serial.print("Received ");
+//      Serial.print(inDataType);
+//      Serial.print(", Val1: ");
+//      Serial.print(inDataValue1);
+//      Serial.print(", Val2: ");
+//      Serial.print(inDataValue2);
+//      Serial.print(", Val3: ");
+//      Serial.println(inDataValue3 + ", ");
       
       if (inDataType == 0) {          // normal signal
         SetServo(inDataValue1);

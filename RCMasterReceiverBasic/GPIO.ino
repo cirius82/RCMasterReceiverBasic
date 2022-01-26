@@ -2,6 +2,8 @@
  * high for testing 64-66 ~1meter (assume 62)
  * min 1mk/h -> 0,2777m/s -> 17,777 Impl/s -> 56ms-Impulse duration
  * max 59km/h -> 13,888m/s -> 888,888 Impl/s -> 1,125ms-Impl_dur
+ * 1km/h ist mit micros in uint16_t nicht abbildbar!
+ * TEST MIT MILLIS
  */
 
 /* -- Includes ------------------------------------------------------------ */
@@ -11,8 +13,8 @@
 /* -- Private Defines ----------------------------------------------------- */
 
 #define INTERVAL 249
-#define R_INTERVAL_MILLIS 100 // max Impulse duration
-#define R_INTERVAL_MICROS 99999 // max Impuulse duration
+#define R_INTERVAL_MILLIS 999 // max Impulse duration
+//#define R_INTERVAL_MICROS 99999 // max Impuulse duration
 #define FILTER_WIDTH 16
 #define CURRENTPIN 21
 #define BATTPIN 20
@@ -28,7 +30,7 @@ uint32_t _gpioLastRevolutions = 0;
 uint16_t _voltage = 1;//12600; // mV
 uint16_t _current = 2;//65500; // mA
 uint16_t _velocity = 0;//65000; // m/H
-uint16_t _revolutions = 0;
+uint32_t _revolutions = 0;
 //uint16_t _revolutionsCounter = 0;
 bool _prevState = false;
 
@@ -77,37 +79,31 @@ bool GPIO_RPM_Cyclic()
   
   if(buttonState != _prevState) {
     _prevState = buttonState;
-    FilterCalculate();
+    FilterCalculate(current);
     _gpioLastRevolutions = current;
   }
   
-  if (_gpioLastRevolutions > ( current - R_INTERVAL_MILLIS)) {
+  if (_gpioLastRevolutions < ( current - R_INTERVAL_MILLIS)) {
     _gpioLastRevolutions = current;
-    FilterCalculate();
+    FilterCalculate(current);
   }
   
-//  if ((_gpioLastRevolutions + REVOLUTIONS_INTERVAL) < current)
-//  {
-//    _gpioLastRevolutions = current;
-//    //_revolutions = _revolutionsCounter;
-//    //_revolutionsCounter = 0;
-//    retVal = true;
-//  }
   return retVal;
 }
 
 /* -- Private Functions --------------------------------------------------- */
 
-void FilterCalculate()
+void FilterCalculate(uint32_t ms_notUsed)
 {
-  uint32_t current = micros();
-  uint32_t difference = current - _revolutionTimer;
-  _revolutionTimer = current;
-  if (difference > R_INTERVAL_MICROS) {
-    difference = R_INTERVAL_MICROS;
-  }
+  uint32_t ms = micros();
   
-  uint32_t tmp = _filteravg / FILTER_WIDTH;
-  _filteravg = (tmp * (FILTER_WIDTH - 1)) + difference;
-  _revolutions = tmp;
+  //uint32_t difference = ms - _revolutionTimer;
+  _revolutionTimer = ms;
+  _revolutions = ms - _revolutionTimer;
+  //_revolutions = difference;
+  
+// Temporarly disable filter  
+//  uint32_t tmp = _filteravg / FILTER_WIDTH;
+//  _filteravg = (tmp * (FILTER_WIDTH - 1)) + difference;
+//  _revolutions = tmp;
 }

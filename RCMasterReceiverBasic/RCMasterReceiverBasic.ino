@@ -63,7 +63,7 @@ void loop()
   if (GPIO_Cyclic()){
     uint16_t voltage = GPIOGetVoltage();
     uint16_t current = GPIOGetCurrent();
-    uint16_t revolutions = GPIOGetVelocity();
+    uint32_t revolutions = GPIOGetVelocity();
     Serial.print("Voltage: ");
     Serial.print(voltage);
     Serial.print(", Current: ");

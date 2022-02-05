@@ -30,20 +30,22 @@ uint32_t _gpioLastRevolutions = 0;
 uint16_t _voltage = 1;//12600; // mV
 uint16_t _current = 2;//65500; // mA
 uint16_t _velocity = 0;//65000; // m/H
-uint32_t _revolutions = 0;
-//uint16_t _revolutionsCounter = 0;
 bool _prevState = false;
 
-// new for speedmeter
+// speedmeter
 uint32_t _revolutionTimer = 0;
 uint32_t _filteravg = 0;
-//uint8_t _filterWidth = 16; // ^2 would be compiler optimized....
-//uint32_t _maxDifference = 4999; // micros
+uint32_t _revolutions = 0;
 
 /* -- Setter / Getter ----------------------------------------------------- */
 uint16_t GPIOGetVoltage(){return _voltage;}   // mV
 uint16_t GPIOGetCurrent(){return _current;}
-uint16_t GPIOGetVelocity(){return _revolutions;}
+uint16_t GPIOGetVelocity(){
+  if (_revolutions > 0xFFFF) {
+    _revolutions = 0xFFFF;
+  }
+  return (uint16_t)(_revolutions);
+ }
 
 /* -- Public Functions ---------------------------------------------------- */
 uint8_t GPIO_setup()
@@ -61,7 +63,7 @@ uint8_t GPIO_setup()
 bool GPIO_Cyclic()
 {
   bool retVal = false; 
-  if ((_gpioLastAction + INTERVAL) < millis())
+  if ((millis() - _gpioLastAction) > INTERVAL)
   {
     retVal = true;
     _gpioLastAction = millis();
@@ -75,7 +77,7 @@ bool GPIO_RPM_Cyclic()
 {
   bool retVal = false; 
   bool buttonState = digitalRead(RPMPIN);
-  uint32_t current = millis();
+  uint32_t current = micros();
   
   if(buttonState != _prevState) {
     _prevState = buttonState;
@@ -83,7 +85,7 @@ bool GPIO_RPM_Cyclic()
     _gpioLastRevolutions = current;
   }
   
-  if (_gpioLastRevolutions < ( current - R_INTERVAL_MILLIS)) {
+  if (_gpioLastRevolutions < ( current - 0xFFFF)) {
     _gpioLastRevolutions = current;
     FilterCalculate(current);
   }
@@ -93,17 +95,9 @@ bool GPIO_RPM_Cyclic()
 
 /* -- Private Functions --------------------------------------------------- */
 
-void FilterCalculate(uint32_t ms_notUsed)
+void FilterCalculate(uint32_t ms)
 {
-  uint32_t ms = micros();
-  
-  //uint32_t difference = ms - _revolutionTimer;
-  _revolutionTimer = ms;
-  _revolutions = ms - _revolutionTimer;
-  //_revolutions = difference;
-  
-// Temporarly disable filter  
-//  uint32_t tmp = _filteravg / FILTER_WIDTH;
-//  _filteravg = (tmp * (FILTER_WIDTH - 1)) + difference;
-//  _revolutions = tmp;
+  _filteravg -= _filteravg / FILTER_WIDTH;
+  _filteravg += ms;
+  _revolutions = _filteravg / FILTER_WIDTH;
 }

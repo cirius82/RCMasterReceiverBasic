@@ -60,6 +60,7 @@ void loop()
   }
   
   //bool gpio = false;
+  GPIO_RPM_Cyclic();
   if (GPIO_Cyclic()){
     uint16_t voltage = GPIOGetVoltage();
     uint16_t current = GPIOGetCurrent();

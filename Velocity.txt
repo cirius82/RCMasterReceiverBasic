@@ -1,0 +1,16 @@
+64 Impulse/m
+
+1km/h
+0,27777 m/s
+17,7777 Imp/s
+56ms-Impulse duration
+(56000micros)
+20km/h -> 5,5555m/s -> 355,555 Impulse/s -> 2812 micros
+25km/h -> 6,94444m/s -> 444,444 Impulse/s -> 2250 micros
+30km/h -> 8,3333m/s -> 533,333 Impulse /s -> 1875 micros
+40km/h -> 11,111m/s -> 711,111 Impulse /s -> 1406 micros
+50km/h -> 13,88888 m/s -> 888,888 Imp/s -> 1125micros
+
+
+uint16_t_MAX = 65536k => passt zu 1km/h (56000)
+Lenkung einschränken: ab ca.25km/h

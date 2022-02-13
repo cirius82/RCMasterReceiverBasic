@@ -19,8 +19,6 @@
 #define CURRENTPIN 21
 #define BATTPIN 20
 #define RPMPIN 18
-#define HIGHCURRENTPINA 22
-#define HIGHCURRENTPINB 23
 
 /* -- Private Types ------------------------------------------------------- */
 
@@ -55,8 +53,6 @@ uint8_t GPIO_setup()
   pinMode(RPMPIN, INPUT_PULLUP);
   _gpioLastAction = millis();
   _gpioLastRevolutions = millis();
-  //analogWrite(HIGHCURRENTPINA, 200);
-  //analogWrite(HIGHCURRENTPINB, 200);
   return 0;  
 }
 
@@ -81,13 +77,14 @@ bool GPIO_RPM_Cyclic()
   
   if(buttonState != _prevState) {
     _prevState = buttonState;
-    FilterCalculate(current);
+    FilterCalculate(current - _gpioLastRevolutions);
     _gpioLastRevolutions = current;
   }
   
   if (_gpioLastRevolutions < ( current - 0xFFFF)) {
-    _gpioLastRevolutions = current;
-    FilterCalculate(current);
+//    _gpioLastRevolutions = current;
+    FilterCalculate(current - _gpioLastRevolutions);
+        _gpioLastRevolutions = current;
   }
   
   return retVal;

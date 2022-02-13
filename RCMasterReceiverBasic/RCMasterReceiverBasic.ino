@@ -26,7 +26,6 @@
 /* -- Private Function Prototypes ----------------------------------------- */
 
 /* -- Private Defines ----------------------------------------------------- */
-#define SIGNEDOFFSET 32768
 #define FAILSAFE 500
 
 /* -- Private Types ------------------------------------------------------- */
@@ -49,33 +48,34 @@ void setup()
   Servo_setup();
   GPIO_setup();
   _lastReceived = millis();
+  SaveFailsaveValueESC(1500);
+  SaveFailsaveValueServo(1400);
 }
 
 void loop()
 {
   unsigned long currentMillis = millis();
   if (currentMillis -_lastReceived >= FAILSAFE) {
-    SetServo(_failSaveX1);
-    SetESC(_failSaveY2);
+    SetServo(LoadFailsaveValueServo());
+    SetESC(LoadFailsaveValueESC());
   }
   
-  //bool gpio = false;
   GPIO_RPM_Cyclic();
   if (GPIO_Cyclic()){
-    uint16_t voltage = GPIOGetVoltage();
-    uint16_t current = GPIOGetCurrent();
-    uint32_t revolutions = GPIOGetVelocity();
-    Serial.print("Voltage: ");
-    Serial.print(voltage);
-    Serial.print(", Current: ");
-    Serial.print(current);
-    Serial.print(", Revolutions ");
-    Serial.println(revolutions);
+//    uint16_t voltage = GPIOGetVoltage();
+//    uint16_t current = GPIOGetCurrent();
+//    uint32_t revolutions = GPIOGetVelocity();
+//    Serial.print("Voltage: ");
+//    Serial.print(voltage);
+//    Serial.print(", Current: ");
+//    Serial.print(current);
+//    Serial.print(", Revolutions ");
+//    Serial.println(revolutions);
   }
 
   if (GPIO_RPM_Cyclic()) {
-    Serial.print("Revolutions ");
-    Serial.println(GPIOGetVelocity());
+//    Serial.print("Revolutions ");
+//    Serial.println(GPIOGetVelocity());
   }
   
   bool dataReceived = false;
@@ -107,24 +107,16 @@ void loop()
       if (inDataType == 0) {          // normal signal
         SetServo(inDataValue1);
         SetESC(inDataValue2);
-      } else if (inDataType == 1) {   // setup servo
-        int servoMoveValue = inDataValue1 - SIGNEDOFFSET;
-        if (servoMoveValue != 0) {
-          MoveServo(inDataValue1);
-        }
-        int servoRangeValue = inDataValue2 - SIGNEDOFFSET;
-        if (servoRangeValue != 0) {
-          ChangeServoRange(servoRangeValue);
-        }
-      } else if (inDataType == 2) {   // setup esc
-        int escMoveValue = inDataValue1 - SIGNEDOFFSET;
-        if (escMoveValue != 0) {
-          MoveEsc(escMoveValue);
-        }
-        int escRangeValue = inDataValue2 - SIGNEDOFFSET;
-        if (escRangeValue != 0) {
-          ChangeEscRange(escRangeValue);
-        }
+        // tbd SetLEDMode(inDataValue3);
+      } else if (inDataType == 1) {   // set FailSaveValues
+        SaveFailsaveValueServo(inDataValue1);
+        SaveFailsaveValueESC(inDataValue2);
+      } else if (inDataType == 2) { // set LEDs
+        // tbd
+      } else if (inDataType == 3) { // set mode
+        // tbd
+      } else if (inDataType == 4) { // set Servo Korrektur Velocity
+        // tbd
       }
     }
     
@@ -136,10 +128,16 @@ void loop()
 
       if (_transmitIdCounter == 0) {
         inDataValue1 = GPIOGetVoltage();
+        Serial.print("Volgate: ");
+        Serial.println(inDataValue1);
       } else if (_transmitIdCounter == 1) {
         inDataValue1 = GPIOGetCurrent();
+        Serial.print("Current: ");
+        Serial.println(inDataValue1);
       } else if (_transmitIdCounter == 2) {
         inDataValue1 = GPIOGetVelocity();
+        Serial.print("Velocitay: ");
+        Serial.println(inDataValue1);
       } else {
         inDataValue1 = 0;
       }
@@ -148,18 +146,15 @@ void loop()
         _transmitIdCounter = 0;
       }
       SetOutData(_transmitIdCounter, inDataValue1, inDataValue2, inDataValue3); 
+      //    Serial.print("Voltage: ");
+//    Serial.print(voltage);
+//    Serial.print(", Current: ");
+//    Serial.print(current);
+//    Serial.print(", Revolutions ");
+//    Serial.println(revolutions);
     }
   } else {
 //    Serial.println("receive error");
-  }
-
-
-  // Servo
-  bool Servo_hasWorked = false;
-  if (Servo_Cyclic(&Servo_hasWorked) != 0) {
-    // fail
-  } else if (Servo_hasWorked) {
-    
   }
 }
 

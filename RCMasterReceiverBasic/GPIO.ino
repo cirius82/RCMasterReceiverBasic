@@ -50,17 +50,31 @@ uint8_t GPIO_setup()
 {
   analogReadResolution(12); // max 13 , 12==4096
   analogWriteFrequency(23, 12000);
+  analogWriteFrequency(22, 12000);
   pinMode(RPMPIN, INPUT_PULLUP);
   _gpioLastAction = millis();
   _gpioLastRevolutions = millis();
   return 0;  
 }
 
+uint16_t _debuging = 0;
 bool GPIO_Cyclic()
 {
+  // PWM test
+  //analogWrite(23, 1);
+  
   bool retVal = false; 
   if ((millis() - _gpioLastAction) > INTERVAL)
   {
+    _debuging++;
+    if (_debuging == 9) {
+      analogWrite(23, 250);
+      analogWrite(22, 250);
+    } else {
+      analogWrite(23, 0);
+      analogWrite(22, 0);
+    }
+    
     retVal = true;
     _gpioLastAction = millis();
     _voltage = analogRead(BATTPIN);

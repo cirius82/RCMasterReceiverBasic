@@ -26,7 +26,6 @@
 /* -- Private Function Prototypes ----------------------------------------- */
 
 /* -- Private Defines ----------------------------------------------------- */
-#define SIGNEDOFFSET 32768
 #define FAILSAFE 500
 
 /* -- Private Types ------------------------------------------------------- */
@@ -104,23 +103,9 @@ void loop()
         SetServo(inDataValue1);
         SetESC(inDataValue2);
       } else if (inDataType == 1) {   // setup servo
-        int servoMoveValue = inDataValue1 - SIGNEDOFFSET;
-        if (servoMoveValue != 0) {
-          MoveServo(inDataValue1);
-        }
-        int servoRangeValue = inDataValue2 - SIGNEDOFFSET;
-        if (servoRangeValue != 0) {
-          ChangeServoRange(servoRangeValue);
-        }
+        // remove and replace with switch case that is defined in RCProject
       } else if (inDataType == 2) {   // setup esc
-        int escMoveValue = inDataValue1 - SIGNEDOFFSET;
-        if (escMoveValue != 0) {
-          MoveEsc(escMoveValue);
-        }
-        int escRangeValue = inDataValue2 - SIGNEDOFFSET;
-        if (escRangeValue != 0) {
-          ChangeEscRange(escRangeValue);
-        }
+        // ..
       }
     }
     

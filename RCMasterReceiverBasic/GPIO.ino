@@ -10,8 +10,8 @@
 #define CURRENTPIN 21
 #define BATTPIN 20
 #define RPMPIN 18
-#define HIGHCURRENTPINA 22
-#define HIGHCURRENTPINB 23
+#define HIGHCURRENTPINA 22  // LED A
+#define HIGHCURRENTPINB 23  // LED B
 
 /* -- Private Types ------------------------------------------------------- */
 
@@ -38,8 +38,8 @@ uint8_t GPIO_setup()
   pinMode(RPMPIN, INPUT_PULLUP);
   _gpioLastAction = millis();
   _gpioLastRevolutions = millis();
-  //analogWrite(HIGHCURRENTPINA, 200);
-  //analogWrite(HIGHCURRENTPINB, 200);
+  analogWrite(HIGHCURRENTPINA, 0);
+  analogWrite(HIGHCURRENTPINB, 0);
   return 0;  
 }
 

@@ -2,6 +2,7 @@
 /* -- Includes ------------------------------------------------------------ */
 #include <SPI.h>
 #include <NRFLite.h>
+#include "RadioConfiguration.h"
 
 /* -- Private Function Prototypes ----------------------------------------- */
 
@@ -12,23 +13,6 @@
 #define PIN_RADIO_CSN 14 // gruen
 
 /* -- Private Types ------------------------------------------------------- */
-enum RadioPacketType
-{
-    AcknowledgementData, // Produced by the primary receiver and provided to the transmitter via an acknowledgement data packet.
-    Heartbeat,    // Sent by the primary transmitter.
-    BeginGetData, // Sent by the primary transmitter to tell the receiver it should load itself with an acknowledgement data packet.
-    EndGetData    // Sent by the primary transmitter to receive the acknowledgement data packet from the receiver.
-};
-
-struct RadioPacket
-{
-    RadioPacketType PacketType;
-    uint8_t FromRadioId;
-    uint8_t DataType;
-    uint16_t Value1;
-    uint16_t Value2;
-    uint8_t Value3;
-};
 
 /* -- Private Global Variables -------------------------------------------- */
 SPIClass mySPI = SPI;
